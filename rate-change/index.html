@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MBC | Rate Change Demo</title><style>
+*{box-sizing:border-box}body{margin:0;font:14px Arial,Helvetica,sans-serif;color:#252525;background:#f5f6f8}header{background:#171717;color:#f4c500;padding:16px 25px;display:flex;justify-content:space-between}header strong{font-size:24px}header a{color:#f4c500}main{max-width:1250px;padding:20px;margin:auto}h1{margin:4px 0}h2{font-size:17px;margin:0}.sub,.hint{color:#697078;font-size:12px}.card{background:white;border:1px solid #dcdfe3;border-radius:7px;margin:20px 0;overflow:visible}.hd{background:#fafafa;padding:14px 17px;border-bottom:1px solid #e2e2e2}.body{padding:18px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.field{min-width:0}.field label{display:block;font-size:12px;font-weight:bold;color:#565c63;margin-bottom:7px}.field input,.field select,.field textarea{padding:10px;width:100%;border:1px solid #cbd0d5;border-radius:5px;background:#fff;font:inherit}.locked{padding:11px;border-radius:5px;background:#f0f1f2;border:1px solid #ddd}.actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:16px}button{font:inherit;cursor:pointer;border:1px solid #c6c8cb;background:white;border-radius:5px;padding:9px 14px;font-weight:bold}button.primary{background:#f4c500;border-color:#e0b900;color:#1b1b1b}button:disabled{opacity:.5;cursor:not-allowed}.selector{position:relative}.trigger{width:100%;display:flex;justify-content:space-between;text-align:left;font-weight:normal}.menu{position:absolute;z-index:20;top:calc(100% + 5px);left:0;right:0;min-width:285px;padding:12px;background:white;border:1px solid #aeb5bc;border-radius:6px;box-shadow:0 8px 20px #0002}.menu[hidden]{display:none}.items{max-height:235px;overflow:auto;margin:9px 0}.option{display:flex;gap:9px;align-items:center;padding:8px 2px;border-bottom:1px solid #eee}.option input{width:16px;height:16px}.menu-actions{display:flex;justify-content:space-between;gap:6px}.menu-actions button{padding:6px 9px;font-size:12px}.selected{margin-top:9px;color:#62666b;font-size:12px}.tablewrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:850px}th{background:#f5f5f5;text-align:left;font-size:12px;padding:10px;border-bottom:1px solid #d8d8d8}td{padding:9px;border-bottom:1px solid #eaeaea}td input,td select{padding:8px;width:100%;min-width:105px;border:1px solid #cbd0d5;border-radius:5px;background:white}td select{min-width:165px}.msg{padding:12px;background:#fffcdd;border:1px solid #eddf99;border-radius:5px;margin-top:13px}.empty{padding:30px;text-align:center;color:#777}.small{font-size:11px;color:#777}.badge{font-size:11px;border:1px solid #ae950d;border-radius:20px;padding:4px 9px}.rowhead{display:flex;justify-content:space-between;align-items:center}.text-danger{color:#a32727}footer{color:#666;font-size:12px;margin:24px 0}@media(max-width:700px){.grid{grid-template-columns:1fr}main{padding:10px}.body{padding:12px}header{padding:12px}}
+</style></head><body>
+<header><div><strong>MBC</strong> &nbsp; <span class="badge">DEMO</span></div><a href="../">All demos</a></header>
+<main><h1>Request Rate Change</h1><p class="sub">Multi-employee / multi-job workflow prototype. Sample data only.</p>
+<section class="card"><div class="hd"><h2>1. Find Employee &amp; Add Rate Changes</h2></div><div class="body">
+<div class="grid">
+<div class="field"><label>Company (from login)</label><div class="locked">Miller Bros. Const., Inc.</div></div>
+<div class="field"><label for="filter">Find employee by job *</label><select id="filter"></select></div>
+<div class="field"><label for="employee">Select employee *</label><select id="employee"></select></div>
+</div>
+<p class="hint">The first job narrows the employee list. After selecting an employee, choose any of their available jobs for the rate change.</p>
+<div class="grid">
+<div class="field selector"><label>Jobs for this employee * (multi-select)</label><button type="button" id="open" class="trigger" aria-expanded="false"><span id="selectionText">Select an employee first</span><span>▾</span></button>
+<div class="menu" id="jobMenu" hidden><div class="field"><label for="search">Search job number or name</label><input id="search" placeholder="Search 30–40 jobs"></div><div class="menu-actions" style="margin-top:9px"><button id="all" type="button">Select all</button><button id="clear" type="button">Clear</button><span id="count" class="small"></span></div><div class="items" id="jobItems"></div><button type="button" id="done" class="primary" style="width:100%">Done</button></div><div id="selected" class="selected"></div></div>
+<div class="field"><label for="fixedRate">New rate for all selected jobs ($) *</label><input id="fixedRate" type="number" min="0" step=".01" value="10.00"></div>
+<div class="field" style="align-self:end"><button id="add" class="primary" style="width:100%">+ Add to Table</button></div>
+</div><div id="notice" role="status"></div>
+</div></section>
+<section class="card"><div class="hd rowhead"><h2>2. Rate Change Review</h2><span class="badge" id="rowCount">0 requests</span></div><div class="body"><p class="hint">Repeat the lookup for additional employees. Edit any rate or approver before submitting.</p><div class="tablewrap"><table><thead><tr><th>Employee</th><th>Job</th><th>Old rate</th><th>New rate ($)</th><th>Approving manager</th><th></th></tr></thead><tbody id="tableBody"><tr><td colspan="6" class="empty">No rate changes added yet.</td></tr></tbody></table></div><div class="field" style="margin-top:16px"><label for="notes">Request notes (optional)</label><textarea rows="2" id="notes" placeholder="Comments about the rate change requests"></textarea></div><div class="actions"><button id="reset">Clear Table</button><button id="submit" class="primary">Review &amp; Submit</button></div><div id="result" role="status"></div></div></section>
+<footer>Prototype only. No eCMS, HeavyJob, login, or email connections. Demo submission creates no real records.</footer>
+</main><script>
+(()=>{
+"use strict";
+const $=id=>document.getElementById(id);
+const jobs=Array.from({length:40},(_,i)=>({id:String(12501+i),name:["Commercial","Environmental","Site Work","Concrete","Utilities","Earthwork","Highway","Construction"][i%8]}));
+const employees=Array.from({length:8},(_,i)=>({id:"e"+(i+1),name:"Employee "+String(i+1).padStart(3,"0"),jobs:jobs.filter((_,j)=>(j+i)%4!==0).map(j=>j.id)}));
+const approvers=["Area Manager A","Area Manager B","Regional Manager A","Vice President A","Vice President B","CCO A","CFO"];
+let chosen=[],rows=[];
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const options=(items,placeholder)=>'<option value="">'+placeholder+'</option>'+items.map(x=>'<option value="'+esc(x.value)+'">'+esc(x.label)+'</option>').join("");
+function current(){return employees.find(e=>e.id===$("employee").value)}
+function eligible(){let e=current();return e?jobs.filter(j=>e.jobs.includes(j.id)):[]}
+function showNotice(msg){$("notice").innerHTML=msg?'<div class="msg">'+esc(msg)+'</div>':""}
+function updateEmployees(){const list=employees.filter(e=>e.jobs.includes($("filter").value));$("employee").innerHTML=options(list.map(e=>({value:e.id,label:e.name})),"Select employee...");chosen=[];updateSelection();showNotice("")}
+function updateSelection(){chosen=chosen.filter(id=>eligible().some(j=>j.id===id));$("selectionText").textContent=!current()?"Select an employee first":chosen.length?chosen.length+" jobs selected":"Select jobs...";$("selected").textContent=chosen.length?"Selected: "+chosen.join(", "):"";renderPicker()}
+function renderPicker(){let search=$("search").value.toLowerCase();let visible=eligible().filter(j=>(j.id+" "+j.name).toLowerCase().includes(search));$("count").textContent=visible.length+" shown";$("jobItems").innerHTML=visible.map(j=>'<label class="option"><input type="checkbox" data-job="'+j.id+'" '+(chosen.includes(j.id)?"checked":"")+'> '+esc(j.id+" — "+j.name)+'</label>').join("")||'<div class="empty">No jobs found</div>'}
+function close(){ $("jobMenu").hidden=true;$("open").setAttribute("aria-expanded","false")}
+$("filter").innerHTML=jobs.map(j=>'<option value="'+j.id+'">'+j.id+" — "+j.name+"</option>").join("");
+$("filter").onchange=()=>{updateEmployees();close()};
+$("employee").onchange=()=>{chosen=[];$("search").value="";updateSelection();close()};
+$("open").onclick=()=>{if(!current())return;$("jobMenu").hidden=!$("jobMenu").hidden;$("open").setAttribute("aria-expanded",String(!$("jobMenu").hidden))};
+$("search").oninput=renderPicker;
+$("jobItems").onchange=e=>{let id=e.target.dataset.job;if(!id)return;chosen=e.target.checked?[...chosen,id]:chosen.filter(x=>x!==id);updateSelection()};
+$("all").onclick=()=>{chosen=eligible().map(j=>j.id);updateSelection()};
+$("clear").onclick=()=>{chosen=[];updateSelection()};
+$("done").onclick=close;
+function defaultApprover(job){return Number(job)%2?"Area Manager A":"Area Manager B"}
+$("add").onclick=()=>{const emp=current(),rate=Number($("fixedRate").value);if(!emp||!chosen.length||$("fixedRate").value.trim()===""||!Number.isFinite(rate)||rate<0){showNotice("Select an employee, one or more jobs, and a valid rate.");return}let additions=chosen.filter(job=>!rows.some(r=>r.key===emp.id+"-"+job)).map(job=>({key:emp.id+"-"+job,person:emp.name,job,old:(8+(Number(job)%7)*.25).toFixed(2),rate:rate.toFixed(2),approver:defaultApprover(job)}));rows.push(...additions);showNotice(additions.length+" rate change(s) added. You can now select another employee.");$("employee").value="";chosen=[];updateSelection();renderTable();close()};
+function renderTable(){$("rowCount").textContent=rows.length+" requests";$("tableBody").innerHTML=rows.length?rows.map(r=>'<tr data-key="'+esc(r.key)+'"><td>'+esc(r.person)+'</td><td>'+esc(r.job)+'</td><td>$'+esc(r.old)+'</td><td><input aria-label="New rate for '+esc(r.job)+'" data-field="rate" type="number" min="0" step=".01" value="'+esc(r.rate)+'"></td><td><select aria-label="Approver for '+esc(r.job)+'" data-field="approver">'+approvers.map(a=>'<option '+(r.approver===a?"selected":"")+'>'+esc(a)+'</option>').join("")+'</select></td><td><button type="button" class="remove text-danger">Remove</button></td></tr>').join(""):'<tr><td colspan="6" class="empty">No rate changes added yet.</td></tr>'}
+$("tableBody").oninput=e=>{const tr=e.target.closest("tr");if(!tr)return;const row=rows.find(r=>r.key===tr.dataset.key);if(row&&e.target.dataset.field)row[e.target.dataset.field]=e.target.value};
+$("tableBody").onchange=e=>{const tr=e.target.closest("tr");if(!tr)return;const row=rows.find(r=>r.key===tr.dataset.key);if(row&&e.target.dataset.field)row[e.target.dataset.field]=e.target.value};
+$("tableBody").onclick=e=>{if(!e.target.classList.contains("remove"))return;const key=e.target.closest("tr").dataset.key;rows=rows.filter(r=>r.key!==key);renderTable()};
+$("reset").onclick=()=>{if(rows.length&&confirm("Remove all rate change entries?")){rows=[];renderTable();$("result").innerHTML=""}};
+$("submit").onclick=()=>{if(!rows.length){$("result").innerHTML='<div class="msg">Add at least one rate change first.</div>';return}if(rows.some(r=>r.rate.trim()===""||!Number.isFinite(Number(r.rate))||Number(r.rate)<0)){$("result").innerHTML='<div class="msg">Correct invalid rates before submission.</div>';return}const count=rows.length,people=new Set(rows.map(r=>r.person)).size;if(confirm("Simulate submitting "+count+" separate approval requests for "+people+" employee(s)?")){$("result").innerHTML='<div class="msg">Demo submission completed: '+count+' individual job requests for '+people+' employee(s). No live records were created.</div>';rows=[];renderTable()}};
+updateEmployees();
+})();
+</script></body></html>
